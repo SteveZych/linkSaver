@@ -16,8 +16,8 @@
     </nav>
 
     <div class="container">
-        <div class="panel" id="addLinkPanel">
-            <h3 class="panel-heading">Add Link</h3>
+        <div class="panel hidden" id="addLinkPanel">
+            <h3 class="header">Add Link</h3>
             <form id="addLinkForm">
                 <input type="text" name="title" id="linkTitle" class="form-control"
                 placeholder="Title">
@@ -35,7 +35,20 @@
             </form>
         </div>
         <div id="linksList">
+            <div class="link panel">
+                <div class="link-options">
+                    <button class="btn-sm">Delete</button>
+                    <button class="btn-sm">Edit</button>
+                </div>
+                <a href=""><h1 class="header">Link Title</h1></a>
+                <p class="link-date">12/25/2017</p>
 
+                <div class="categories">
+                    categories:
+                    <span class="categories">Web Development</span>
+                    <span class="categories">Javascript</span>
+                </div>
+            </div>
         </div>
     </div>
 
