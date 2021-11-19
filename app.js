@@ -1,9 +1,33 @@
 //References to HTML elements
 const linkCategory = document.querySelector("#linkCategory");
 const submitButton = document.querySelector("#submitButton");
+const addBtn = document.querySelector("#addBtn");
+const cancelButton = dcoument.querySelector("#cancelButton");
+const addLinkPanel = dcoument.querySelector("#addLinkPanel");
+
 
 let linkCategories = [];
 let links = [];
+
+addBtn.addEventListener('click', (event) => {
+    console.log("add button clicked");
+    showFormPanel();
+})
+
+cancelButton.addEventListener('click', (event) => {
+    //we don't actually want this to submit anything
+    event.preventDefault();
+    console.log("cancel button clicked");
+    hideFormPanel();
+})
+
+function showFormPanel(){
+    addLinkPanel.classList.remove('hidden');
+}
+
+function hideFormPanel(){
+    addLinkPanel.classList.remove('hidden');
+}
 
 linkCategory.addEventListener('keydown', function(event){
     
@@ -49,4 +73,7 @@ submitButton.addEventListener('click', (event) => {
     linkCategories = [];
 
     displayLinkCategories();
+
+    //hide addLinkPanel form
+    hideFormPanel();
 })
