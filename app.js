@@ -1,4 +1,3 @@
-//References to HTML elements
 const linkCategory = document.querySelector("#linkCategory");
 const submitButton = document.querySelector("#submitButton");
 const addBtn = document.querySelector("#addBtn");
@@ -6,11 +5,15 @@ const cancelButton = document.querySelector("#cancelButton");
 const addLinkPanel = document.querySelector("#addLinkPanel");
 const addedCategories = document.querySelector("#addedCategories");
 
+const addLinkContainer = document.querySelector("#addLinkContainer");
+
 const linksList = document.querySelector('#linksList');
+
+let editIndex = -1;
 
 let linkCategories = [];
 let links = [
-    {
+	{
 		title: 'New Link 1',
 		url: 'url1.com',
 		categories: ['node', 'angular']
@@ -29,99 +32,115 @@ let links = [
 
 displayLinks();
 
+
 addBtn.addEventListener('click', (event) => {
-    console.log("add button clicked");
-    showFormPanel();
+	console.log("Add btn clicked");
+	showFormPanel();
 });
 
 cancelButton.addEventListener('click', (event) => {
-    //we don't actually want this to submit anything
-    event.preventDefault();
-    console.log("cancel button clicked");
-    hideFormPanel();
+	event.preventDefault();
+	console.log("Cancel button clicked");
+
+	hideFormPanel();
+
 });
 
-function showFormPanel(){
-    addLinkPanel.classList.remove('hidden');
-};
-
-function hideFormPanel(){
-    addLinkPanel.classList.remove('hidden');
-    clearLinkForm();
-};
-
-linkCategory.addEventListener('keydown', function(event){
-    
-    if(event.keyCode === 188){
-        event.preventDefault();
-        linkCategories.push(linkCategory.value);
-        linkCategory.value = "";
-        
-        //Display the updated categories
-        displayLinkCategories();
-    }
-});
-
-function  displayLinkCategories() {
-    console.log("Display link categories.")
-    addedCategories.innerHTML = '';
-     for (let categories of linkCategories){
-         var categoryHTMLString = `<span class="category">${category}</span>`;
-         addedCategories.innerHTML += categoryHTMLString;
-     }
-};
-
-function clearLinkForm(){
-    linkTitle.value = '';
-    linkUrl.value = '';
-    linkCategory.value = '';
-    linkCategories = [];
-    addedCategories.innerHTML = '';
+function showFormPanel() {
+	addLinkContainer.classList.remove('hidden');
+	displayLinkCategories();
 }
 
+function hideFormPanel() {
+	addLinkContainer.classList.add('hidden');
+	clearLinkForm();
+}
+
+linkCategory.addEventListener('keydown', function (event) {
+
+	if (event.keyCode === 188) {
+		event.preventDefault();
+
+		linkCategories.push(linkCategory.value);
+
+		linkCategory.value = '';
+
+		//Display the updated categories
+		displayLinkCategories();
+	}
+})
+
+function displayLinkCategories() {
+	console.log("Displaying Link Categories");
+	addedCategories.innerHTML = '';
+	for (let category of linkCategories) {
+		var categoryHTMLString = `<span class="category">${category}</span>`;
+		addedCategories.innerHTML += categoryHTMLString;
+	}
+
+}
+
+
+
+function clearLinkForm() {
+	linkTitle.value = '';
+	linkUrl.value = '';
+	linkCategory.value = '';
+	linkCategories = [];
+	addedCategories.innerHTML = '';
+}
+
+console.log(this);
+
 submitButton.addEventListener('click', (event) => {
-    
-    //Stop form from submitting because the default action brings it to a new page
-    event.preventDefault();
 
-    //You can use dot notation to access the value of HTML id
-    const title = linkTitle.value;
-    const url = linkUrl.value;
-    const categories = linkCategories;
+	//Stop form from submitting
+	event.preventDefault();
 
-    //With ES6, it assumes that the key and value are the same if you declare the key as a variable
-    //instead of title: title, etc.
-    const newLink = {
-        title,
-        url,
-        categories
-    }
+	const title = linkTitle.value;
+	const url = linkUrl.value;
+	const categories = linkCategories;
 
-    //.unshift is like push except it adds it to the beginning of the array
-    links.unshift(newLink);
+	const newLink = {
+		title,
+		url,
+		categories
+	}
 
-    //empty out values for the form
-    clearLinkForm();
+	if (editIndex === -1) {
+		//push new link to array
+		links.unshift(newLink);
+	}
+	else {
+		links[editIndex] = newLink;
+		editIndex = -1;
+	}
 
-    displayLinkCategories();
 
-    //hide addLinkPanel form
-    hideFormPanel();
+	clearLinkForm();
 
-    displayLinks();
+	displayLinkCategories();
+
+	//hide the addLinkPanel form
+	hideFormPanel();
+
+	displayLinks();
+
+
 });
 
 function displayLinks() {
 	linksList.innerHTML = '';
 
+	let index = 0;
 	for (let link of links) {
 
 		let linkHTMLString = `
 		<div class="flex-item">
 			<div class="link panel">
 				<div class="link-options">
-					<button class="btn-sm" >Delete</button>
-					<button class="btn-sm" >Edit</button>
+					<button class="btn-sm" onclick="deleteLink(${index})">Delete</button>
+					<button class="btn-sm" onclick="editLink(${index})">Edit</button>
 				</div>
 				<a href="${link.url}">
 					<h1 class="header">${link.title}</h1>
@@ -141,6 +160,26 @@ function displayLinks() {
 			;
 
 		linksList.innerHTML += linkHTMLString;
+		index++;
 
 	}
+}
+
+function deleteLink(index) {
+	console.log("Deleting link at index", index);
+	links.splice(index, 1);
+	displayLinks();
+}
+
+function editLink(index) {
+	console.log("Editing link at index", index);
+
+	editIndex = index;
+	linkTitle.value = links[index].title;
+	linkUrl.value = links[index].url;
+	linkCategories = links[index].categories;
+
+	showFormPanel();
+
+
 }
