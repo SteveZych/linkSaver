@@ -16,17 +16,20 @@ let links = [
 	{
 		title: 'New Link 1',
 		url: 'url1.com',
-		categories: ['node', 'angular']
+		categories: ['node', 'angular'],
+		date: new Date()
 	},
 	{
 		title: 'New Link 2',
 		url: 'url2.com',
-		categories: ['js', 'angular']
+		categories: ['js', 'angular'],
+		date: new Date()
 	},
 	{
 		title: 'New Link 3',
 		url: 'url3.com',
-		categories: ['node', 'bootstrap']
+		categories: ['node', 'bootstrap'],
+		date: new Date()
 	}
 ];
 
@@ -104,7 +107,8 @@ submitButton.addEventListener('click', (event) => {
 	const newLink = {
 		title,
 		url,
-		categories
+		categories,
+		date: new Date()
 	}
 
 	if (editIndex === -1) {
@@ -145,7 +149,7 @@ function displayLinks() {
 				<a href="${link.url}">
 					<h1 class="header">${link.title}</h1>
 				</a>
-				<p class="link-date">${Date.now()}</p>
+				<p class="link-date">${formateDate(link.date)}</p>
 				<div class="categories">
 					Categories:`;
 		for (let category of link.categories) {
@@ -182,4 +186,8 @@ function editLink(index) {
 	showFormPanel();
 
 
+}
+
+function formatDate(date){
+	return `${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDay()).slice(-2)}/${date.getFullYear()}`
 }
